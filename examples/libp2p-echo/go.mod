@@ -1,8 +1,8 @@
-module github.com/libp2p/go-libp2p-webrtc-direct/examples/libp2p-echo
+module github.com/wms2537/go-libp2p-webrtc-direct/examples/libp2p-echo
 
 go 1.18
 
-replace github.com/libp2p/go-libp2p-webrtc-direct => ../../
+replace github.com/wms2537/go-libp2p-webrtc-direct => ../../
 
 require (
 	github.com/ipfs/go-log v1.0.5

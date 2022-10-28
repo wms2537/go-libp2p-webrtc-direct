@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	smux "github.com/libp2p/go-libp2p-core/mux"
-	peer "github.com/libp2p/go-libp2p-core/peer"
-	tpt "github.com/libp2p/go-libp2p-core/transport"
+	smux "github.com/libp2p/go-libp2p/core/network"
+	peer "github.com/libp2p/go-libp2p/core/peer"
+	tpt "github.com/libp2p/go-libp2p/core/transport"
 	ma "github.com/multiformats/go-multiaddr"
 	mafmt "github.com/multiformats/go-multiaddr-fmt"
 	"github.com/pion/webrtc/v3"

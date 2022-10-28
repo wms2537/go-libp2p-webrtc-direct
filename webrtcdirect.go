@@ -2,8 +2,8 @@ package libp2pwebrtcdirect
 
 import (
 	logging "github.com/ipfs/go-log"
-	smux "github.com/libp2p/go-libp2p-core/mux"
-	tpt "github.com/libp2p/go-libp2p-core/transport"
+	smux "github.com/libp2p/go-libp2p/core/network"
+	tpt "github.com/libp2p/go-libp2p/core/transport"
 	ma "github.com/multiformats/go-multiaddr"
 )
 

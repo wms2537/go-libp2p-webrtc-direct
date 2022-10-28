@@ -1,8 +1,8 @@
-module github.com/libp2p/go-libp2p-webrtc-direct/examples/standalone
+module github.com/wms2537/go-libp2p-webrtc-direct/examples/standalone
 
 go 1.18
 
-replace github.com/libp2p/go-libp2p-webrtc-direct => ../../
+replace github.com/wms2537/go-libp2p-webrtc-direct => ../../
 
 require (
 	github.com/libp2p/go-libp2p-core v0.8.5

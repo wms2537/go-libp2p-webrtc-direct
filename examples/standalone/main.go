@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"io"
 
-	smux "github.com/libp2p/go-libp2p-core/mux"
-	tpt "github.com/libp2p/go-libp2p-core/transport"
 	mplex "github.com/libp2p/go-libp2p-mplex"
-	direct "github.com/libp2p/go-libp2p-webrtc-direct"
+	smux "github.com/libp2p/go-libp2p/core/network"
+	tpt "github.com/libp2p/go-libp2p/core/transport"
 	ma "github.com/multiformats/go-multiaddr"
 	"github.com/pion/webrtc/v3"
+	direct "github.com/wms2537/go-libp2p-webrtc-direct"
 )
 
 const listenFlag = "listen"
