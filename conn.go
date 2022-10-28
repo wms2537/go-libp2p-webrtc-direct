@@ -57,6 +57,7 @@ type Conn struct {
 	accept    chan chan detachResult
 	isMuxed   bool
 	muxedConn smux.MuxedConn
+	Scope     smux.ConnScope
 }
 
 func newConn(config *connConfig, pc *webrtc.PeerConnection, initChannel datachannel.ReadWriteCloser) *Conn {
