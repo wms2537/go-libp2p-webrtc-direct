@@ -23,7 +23,7 @@ type Transport struct {
 
 // NewTransport creates a WebRTC transport that signals over a direct HTTP connection.
 // It is currently required to provide a muxer.
-func NewTransport(webrtcOptions webrtc.Configuration, muxer smux.Multiplexer) *Transport {
+func NewTransport(webrtcOptions webrtc.Configuration, muxer smux.Multiplexer, rcmgr smux.ResourceManager) *Transport {
 	s := webrtc.SettingEngine{}
 	// Use Detach data channels mode
 	s.DetachDataChannels()
@@ -34,6 +34,7 @@ func NewTransport(webrtcOptions webrtc.Configuration, muxer smux.Multiplexer) *T
 		muxer:         muxer, // TODO: Make the muxer optional
 		localID:       peer.ID("1"),
 		api:           api,
+		rcmgr:         rcmgr,
 	}
 }
 
