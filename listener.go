@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/libp2p/go-libp2p/core/network"
 	tpt "github.com/libp2p/go-libp2p/core/transport"
 	ma "github.com/multiformats/go-multiaddr"
 	manet "github.com/multiformats/go-multiaddr/net"
@@ -124,7 +125,12 @@ func (l *Listener) handleSignal(offerStr string) (string, error) {
 		return "", fmt.Errorf("failed to encode answer: %v", err)
 	}
 
-	c := newConn(l.config, pc, nil)
+	connScope, err := l.config.transport.rcmgr.OpenConnection(network.DirInbound, false, l.config.maAddr)
+	if err != nil {
+		return "", fmt.Errorf("resource manager blocked incoming connection")
+	}
+
+	c := newConn(l.config, pc, nil, connScope)
 	l.accept <- c
 
 	return answerEnc, nil

@@ -16,6 +16,7 @@ import (
 type Transport struct {
 	webrtcOptions webrtc.Configuration
 	muxer         smux.Multiplexer
+	rcmgr         smux.ResourceManager
 	localID       peer.ID
 	api           *webrtc.API
 }
@@ -53,9 +54,20 @@ func (t *Transport) Dial(ctx context.Context, raddr ma.Multiaddr, p peer.ID) (tp
 		return nil, fmt.Errorf("failed to get dial args: %v", err)
 	}
 
+	scope, err := t.rcmgr.OpenConnection(smux.DirOutbound, false, raddr)
+	if err != nil {
+		log.Debugw("resource manager blocked outgoing connection", "peer", p, "addr", raddr, "error", err)
+		return nil, err
+	}
+	if err := scope.SetPeer(p); err != nil {
+		log.Debugw("resource manager blocked outgoing connection for peer", "peer", p, "addr", raddr, "error", err)
+		scope.Done()
+		return nil, err
+	}
+
 	cfg.remoteID = p
 
-	conn, err := dial(ctx, cfg)
+	conn, err := dial(ctx, cfg, scope)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create connection: %v", err)
 	}

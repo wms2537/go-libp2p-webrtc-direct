@@ -21,8 +21,8 @@ import (
 	gologging "github.com/whyrusleeping/go-logging"
 
 	mplex "github.com/libp2p/go-libp2p-mplex"
-	direct "github.com/libp2p/go-libp2p-webrtc-direct"
 	"github.com/pion/webrtc/v3"
+	direct "github.com/wms2537/go-libp2p-webrtc-direct"
 )
 
 // makeBasicHost creates a LibP2P host with a random peer ID listening on the

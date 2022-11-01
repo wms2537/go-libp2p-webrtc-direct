@@ -57,16 +57,17 @@ type Conn struct {
 	accept    chan chan detachResult
 	isMuxed   bool
 	muxedConn smux.MuxedConn
-	Scope     smux.ConnScope
+	scope     smux.ConnScope
 }
 
-func newConn(config *connConfig, pc *webrtc.PeerConnection, initChannel datachannel.ReadWriteCloser) *Conn {
+func newConn(config *connConfig, pc *webrtc.PeerConnection, initChannel datachannel.ReadWriteCloser, scope smux.ConnScope) *Conn {
 	conn := &Conn{
 		config:         config,
 		peerConnection: pc,
 		initChannel:    initChannel,
 		accept:         make(chan chan detachResult),
 		isMuxed:        config.transport.muxer != nil,
+		scope:          scope,
 	}
 
 	pc.OnDataChannel(func(dc *webrtc.DataChannel) {
@@ -78,7 +79,7 @@ func newConn(config *connConfig, pc *webrtc.PeerConnection, initChannel datachan
 	return conn
 }
 
-func dial(ctx context.Context, config *connConfig) (*Conn, error) {
+func dial(ctx context.Context, config *connConfig, scope smux.ConnScope) (*Conn, error) {
 	api := config.transport.api
 	pc, err := api.NewPeerConnection(config.transport.webrtcOptions)
 	if err != nil {
@@ -143,10 +144,10 @@ func dial(ctx context.Context, config *connConfig) (*Conn, error) {
 		if res.err != nil {
 			return nil, res.err
 		}
-		return newConn(config, pc, res.dc), nil
+		return newConn(config, pc, res.dc, scope), nil
 
 	case <-ctx.Done():
-		return newConn(config, pc, nil), ctx.Err()
+		return newConn(config, pc, nil, scope), ctx.Err()
 	}
 }
 
@@ -266,7 +267,7 @@ func (c *Conn) getMuxed() (smux.MuxedConn, error) {
 
 // Note: caller should hold the conn lock.
 func (c *Conn) useMuxer(conn net.Conn, muxer smux.Multiplexer) error {
-	muxed, err := muxer.NewConn(conn, c.config.isServer)
+	muxed, err := muxer.NewConn(conn, c.config.isServer, smux.NullScope)
 	if err != nil {
 		return err
 	}
@@ -357,6 +358,8 @@ func (c *Conn) LocalMultiaddr() ma.Multiaddr {
 func (c *Conn) RemoteMultiaddr() ma.Multiaddr {
 	return c.config.maAddr
 }
+
+func (c *Conn) Scope() smux.ConnScope { return c.scope }
 
 // Transport returns the transport to which this connection belongs.
 func (c *Conn) Transport() tpt.Transport {
